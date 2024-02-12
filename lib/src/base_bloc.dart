@@ -18,6 +18,20 @@ class BaseBloc<T> implements IBaseBloc<T> {
   }
 
   @override
+  Option<BlocEvent<T>> get lastEmittedEvent => _dataSubject.hasValue ? Some(_dataSubject.value) : None<BlocEvent<T>>();
+
+  @override
+  Option<BlocData<T>> get lastEmittedData {
+    if(_dataSubject.hasValue) {
+      return switch(_dataSubject.value.data) {
+        BlocData<T> bd => Some(bd),
+        _ => None<BlocData<T>>()
+      };
+    }
+    return None<BlocData<T>>();
+  }
+
+  @override
   void add(BlocEvent<T> event) {
     _dataSubject.add(event);
   }
