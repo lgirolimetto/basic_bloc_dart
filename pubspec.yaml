@@ -1,7 +1,7 @@
 name: basic_bloc_dart
 description: Minimal bloc library.
 version: 0.0.1
-repository:
+repository: https://github.com/lgirolimetto/basic_bloc_dart.git
 homepage:
 
 environment:
