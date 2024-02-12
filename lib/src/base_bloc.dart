@@ -1,8 +1,8 @@
-import 'package:cyrus72_bloc_dart/src/bloc_data.dart';
-import 'package:cyrus72_bloc_dart/src/bloc_event.dart';
-import 'package:cyrus72_functional_dart/cyrus72_functional_dart.dart';
+import 'package:basic_bloc_dart/src/bloc_data.dart';
+import 'package:basic_bloc_dart/src/bloc_event.dart';
+import 'package:basic_functional_dart/basic_functional_dart.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:cyrus72_bloc_dart/src/i_base_bloc.dart';
+import 'package:basic_bloc_dart/src/i_base_bloc.dart';
 
 typedef BlocRequest<T> = Future<T> Function();
 

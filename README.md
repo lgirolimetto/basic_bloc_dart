@@ -1,2 +1,2 @@
-# cyrus72_bloc_dart
+# basic_bloc_dart
 Simple bloc library

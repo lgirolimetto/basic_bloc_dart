@@ -1,7 +1,7 @@
-import 'package:cyrus72_bloc_dart/src/base_bloc.dart';
-import 'package:cyrus72_bloc_dart/src/bloc_data.dart';
-import 'package:cyrus72_bloc_dart/src/bloc_event.dart';
-import 'package:cyrus72_functional_dart/cyrus72_functional_dart.dart';
+import 'package:basic_bloc_dart/src/base_bloc.dart';
+import 'package:basic_bloc_dart/src/bloc_data.dart';
+import 'package:basic_bloc_dart/src/bloc_event.dart';
+import 'package:basic_functional_dart/basic_functional_dart.dart';
 
 abstract class IBaseBloc<T> {
   Stream<BlocEvent<T>> get dataStream;

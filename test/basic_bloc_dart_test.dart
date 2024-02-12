@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cyrus72_bloc_dart/cyrus72_bloc_dart.dart';
-import 'package:cyrus72_bloc_dart/src/bloc_event.dart';
+import 'package:basic_bloc_dart/basic_bloc_dart.dart';
 
 void main() {
   test('TEST BASE BLOC INIT', () async {

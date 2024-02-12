@@ -1,4 +1,4 @@
-library cyrus72_bloc_dart;
+library basic_bloc_dart;
 
 export 'src/i_base_bloc.dart';
 export 'src/base_bloc.dart';

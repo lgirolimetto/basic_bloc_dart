@@ -9,6 +9,13 @@
             </list>
           </value>
         </entry>
+        <entry key="basic_functional_dart">
+          <value>
+            <list>
+              <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/basic_functional_dart-1.1.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="boolean_selector">
           <value>
             <list>
@@ -34,13 +41,6 @@
           <value>
             <list>
               <option value="$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/collection-1.17.2/lib" />
-            </list>
-          </value>
-        </entry>
-        <entry key="cyrus72_functional_dart">
-          <value>
-            <list>
-              <option value="$PROJECT_DIR$/../functionals/cyrus72_functional_dart/lib" />
             </list>
           </value>
         </entry>
@@ -180,11 +180,11 @@
       </option>
     </properties>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../functionals/cyrus72_functional_dart/lib" />
       <root url="file://$PROJECT_DIR$/../../Libraries/flutter/bin/cache/pkg/sky_engine/lib" />
       <root url="file://$PROJECT_DIR$/../../Libraries/flutter/packages/flutter/lib" />
       <root url="file://$PROJECT_DIR$/../../Libraries/flutter/packages/flutter_test/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/async-2.11.0/lib" />
+      <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/basic_functional_dart-1.1.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/boolean_selector-2.1.1/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/characters-1.3.0/lib" />
       <root url="file://$USER_HOME$/AppData/Local/Pub/Cache/hosted/pub.dev/clock-1.1.1/lib" />

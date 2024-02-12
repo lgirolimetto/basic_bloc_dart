@@ -1,6 +1,7 @@
-name: cyrus72_bloc_dart
+name: basic_bloc_dart
 description: Minimal bloc library.
 version: 0.0.1
+repository:
 homepage:
 
 environment:
@@ -11,8 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   rxdart: ^0.27.7
-  cyrus72_functional_dart:
-    path: ../functionals/cyrus72_functional_dart
+  basic_functional_dart: ^1.1.0
 
 dev_dependencies:
   flutter_test:

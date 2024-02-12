@@ -1,4 +1,4 @@
-import 'package:cyrus72_bloc_dart/cyrus72_bloc_dart.dart';
+import 'package:basic_bloc_dart/basic_bloc_dart.dart';
 
 class BlocEvent<T> {
   final BaseBlocData<T> data;
