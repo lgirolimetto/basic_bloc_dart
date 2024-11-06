@@ -1,29 +1,37 @@
+import 'dart:async';
+
 import 'package:basic_bloc_dart/src/bloc_data.dart';
-import 'package:basic_bloc_dart/src/bloc_event.dart';
 import 'package:basic_functional_dart/basic_functional_dart.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:basic_bloc_dart/src/i_base_bloc.dart';
 
 typedef BlocRequest<T> = Future<T> Function();
+typedef ValidationBlocRequest<T> = Future<Validation<T>> Function();
 
 class BaseBloc<T> implements IBaseBloc<T> {
-  final _dataSubject = BehaviorSubject<BlocEvent<T>>();
-  @override
-  Stream<BlocEvent<T>> get dataStream => _dataSubject.stream;
+  StreamSubscription? _request;
 
-  BaseBloc({BlocEvent<T>? initialEvent}) {
-    if(initialEvent case final ev?) {
-      add(ev);
-    }
+  final String emitterId;
+  final _dataSubject = BehaviorSubject<BaseBlocData<T>>();
+
+  @override
+  Stream<BaseBlocData<T>> get dataStream => _dataSubject.stream;
+
+  BaseBloc({T? data, String dataId = '', required this.emitterId}) {
+    emitBlocData(data != null
+                  ? BlocData(data, id: dataId, emitter: emitterId)
+                  : NoData()
+    );
   }
 
-  @override
-  Option<BlocEvent<T>> get lastEmittedEvent => _dataSubject.hasValue ? Some(_dataSubject.value) : None<BlocEvent<T>>();
+  BaseBloc.withLoading({this.emitterId = ''}) {
+    emitBlocData(BlocLoading(emitter: emitterId));
+  }
 
   @override
   Option<BlocData<T>> get lastEmittedData {
     if(_dataSubject.hasValue) {
-      return switch(_dataSubject.value.data) {
+      return switch(_dataSubject.value) {
         BlocData<T> bd => Some(bd),
         _ => None<BlocData<T>>()
       };
@@ -31,31 +39,42 @@ class BaseBloc<T> implements IBaseBloc<T> {
     return None<BlocData<T>>();
   }
 
+
   @override
-  void add(BlocEvent<T> event) {
-    _dataSubject.add(event);
+  void updateData(T data, {String? dataId}) {
+    lastEmittedData.fold(
+            () => emitBlocData(BlocData(data), dataId: dataId),
+            (some) {
+          if(some.value != data) {
+            emitBlocData(BlocData(data));
+          }
+        });
   }
 
   @override
-  void emitData({required BaseBlocData<T> data, String? emitter}) {
-    final ev = BlocEvent.withEmissionTimeNow(dataId: '', emitter: emitter ?? '', data: data);
-    _dataSubject.add(ev);
+  void emitData(T data, {String? dataId}) {
+    emitBlocData(BlocData(data));
   }
 
   @override
-  void emitEmptyData({String? emitter}) {
-    emitData(data: NoData<T>(), emitter: emitter);
+  void emitBlocData(BaseBlocData<T> data, {String? dataId}) {
+    _dataSubject.add(data);
   }
 
   @override
-  void emitLoading({String? emitter}) {
-    emitData(data: BlocLoading<T>(), emitter: emitter);
+  void emitEmptyData({String? dataId}) {
+    emitBlocData(NoData<T>());
   }
 
   @override
-  void emitError({Object? error, StackTrace? trace, String? emitter}) {
-    emitData(
-        data: BlocError<T>(
+  void emitLoading() {
+    emitBlocData(BlocLoading<T>());
+  }
+
+  @override
+  void emitError({Object? error, StackTrace? trace}) {
+    emitBlocData(
+        BlocError<T>(
                       error == null
                           ? None<Object>()
                           : Some(error),
@@ -63,36 +82,50 @@ class BaseBloc<T> implements IBaseBloc<T> {
                           ? None<StackTrace>()
                           : Some(trace),
                       ),
-        emitter: emitter);
+        );
   }
 
   @override
-  Future<void> request({required BlocRequest<T> request, BaseBlocData<T>? initialData, String? emitter}) {
+  void request({required BlocRequest<T> request, BaseBlocData<T>? initialData}) {
     if(initialData case final data?) {
-      emitData(data: data, emitter: emitter);
+      emitBlocData(data);
     }
 
-    return request()
-            .then((value) => switch(value) {
-              null => emitEmptyData(emitter: emitter),
-              List l => l.isEmpty ? emitEmptyData(emitter: emitter) : emitData(data: BlocData(l as T), emitter: emitter),
-              T data => emitData(data: BlocData(data), emitter: emitter),
-            })
-            .onError((error, stackTrace)
-                => emitError(error: error, trace: stackTrace, emitter: emitter))
-            .catchError((e) {
-              if(e is Error) {
-                emitError(error: e, trace: e.stackTrace, emitter: emitter);
-              }
-              else if(e is Exception) {
-                emitError(error: e, emitter: emitter);
-              }
+    _request?.cancel();
+    _request = request()
+        .asStream()
+        .handleError((err, stackTrace) => emitError(error: err, trace: stackTrace))
+        .listen((val) => switch(val) {
+              null => emitEmptyData(),
+              List l => l.isEmpty ? emitEmptyData() : emitBlocData(BlocData(l as T)),
+              T data => emitBlocData(BlocData(data)),
             });
+  }
 
+  @override
+  void requestWithValidation({required ValidationBlocRequest<T> request, BaseBlocData<T>? initialData}) {
+    if(initialData case final data?) {
+      emitBlocData(data);
+    }
+
+    _request?.cancel();
+    _request = request()
+            .asStream()
+            .listen((val) =>
+              val.fold(
+                (failure) => emitError(error: failure),
+                (val) => switch(val) {
+                  null => emitEmptyData(),
+                  Unit _ => emitEmptyData(),
+                  List l => l.isEmpty ? emitEmptyData() : emitBlocData(BlocData(l as T)),
+                  T data => emitBlocData(BlocData(data)),
+                }
+            ));
   }
 
   @override
   void dispose() {
+    _request?.cancel();
     _dataSubject.close();
   }
 }

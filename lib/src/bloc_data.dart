@@ -2,24 +2,28 @@
 import 'package:basic_functional_dart/basic_functional_dart.dart';
 
 sealed class BaseBlocData<T> {
-  const BaseBlocData();
+  final String emitter;
+  final DateTime emissionTime;
+
+  BaseBlocData({this.emitter = '', DateTime? emissionTime}) : emissionTime = emissionTime ?? DateTime.now();
 }
 
 class BlocLoading<T> extends BaseBlocData<T> {
-  const BlocLoading();
+  BlocLoading({super.emitter, super.emissionTime});
 }
 
 class BlocData<T> extends BaseBlocData<T> {
-  final T data;
-  const BlocData(this.data);
+  final String id;
+  final T value;
+  BlocData(this.value, {this.id = '', super.emitter, super.emissionTime});
 }
 
 class BlocError<T> extends BaseBlocData<T> {
   final Option<Object> error;
   final Option<StackTrace> stackTrace;
-  const BlocError(this.error, this.stackTrace);
+  BlocError(this.error, this.stackTrace, {super.emitter, super.emissionTime});
 }
 
 class NoData<T> extends BaseBlocData<T> {
-  const NoData();
+  NoData({super.emitter, super.emissionTime});
 }
