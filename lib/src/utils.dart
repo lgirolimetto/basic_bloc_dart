@@ -1,5 +1,6 @@
 import 'package:basic_bloc_dart/basic_bloc_dart.dart';
 import 'package:basic_functional_dart/basic_functional_dart.dart';
+import 'package:get_it/get_it.dart';
 
 extension NullableOption<T> on Option<T> {
   T? toNullable() {
@@ -10,12 +11,22 @@ extension NullableOption<T> on Option<T> {
   }
 }
 
-class BlocService<T> {
-  final BaseBloc<T> bloc;
+extension BaseBlocManagement<T> on BaseBloc<T> {
+  BaseBloc<T> push() {
+    return GetIt.instance.registerSingleton(this, instanceName: emitterId, dispose: (b) => b.dispose());
+  }
 
-  const BlocService(this.bloc);
+  void pop() {
+    GetIt.instance.unregister(instance: this, instanceName: emitterId);
+  }
+}
 
-  T? getNullableLastEmittedData() {
-    return bloc.lastEmittedData.toNullable()?.value;
+extension BaseBlocManagementStrings on String {
+  bool isBlocRegistered<T>() {
+    return GetIt.instance.isRegistered<BaseBloc<T>>(instanceName: this);
+  }
+
+  BaseBloc<T> getBloc<T>() {
+    return GetIt.instance.get<BaseBloc<T>>(instanceName: this);
   }
 }

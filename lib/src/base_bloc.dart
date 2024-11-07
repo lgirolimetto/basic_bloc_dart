@@ -103,7 +103,7 @@ class BaseBloc<T> implements IBaseBloc<T> {
   }
 
   @override
-  void requestWithValidation({required ValidationBlocRequest<T> request, BaseBlocData<T>? initialData}) {
+  void validatedRequest({required ValidationBlocRequest<T> request, BaseBlocData<T>? initialData}) {
     if(initialData case final data?) {
       emitBlocData(data);
     }

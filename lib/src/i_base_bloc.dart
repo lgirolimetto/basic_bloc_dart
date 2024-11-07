@@ -13,6 +13,6 @@ abstract class IBaseBloc<T> {
   void emitLoading();
   void emitError({Object? error, StackTrace? trace});
   void request({required BlocRequest<T> request, BaseBlocData<T>? initialData});
-  void requestWithValidation({required ValidationBlocRequest<T> request, BaseBlocData<T>? initialData});
+  void validatedRequest({required ValidationBlocRequest<T> request, BaseBlocData<T>? initialData});
   void dispose();
 }
